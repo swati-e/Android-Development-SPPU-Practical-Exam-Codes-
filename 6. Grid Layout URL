@@ -1,0 +1,151 @@
+MainActivity.java
+package com.example.a6urlgridlayout;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Button button1 = findViewById(R.id.button1);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUrl("https://www.google.com/");
+            }
+        });
+
+        Button button2 = findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUrl("https://facebook.com");
+            }
+        });
+
+        Button button3 = findViewById(R.id.button3);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUrl("https://instagram.com");
+            }
+        });
+        Button button4 = findViewById(R.id.button4);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUrl("https://amazon.com");
+            }
+        });
+
+        Button button5 = findViewById(R.id.button5);
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUrl("https://flipkart.com");
+            }
+        });
+
+        Button button6 = findViewById(R.id.button6);
+        button6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openUrl("https://whatsapp.com");
+            }
+        });
+
+        // Add onClickListeners for other buttons and URLs
+    }
+
+    private void openUrl(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
+    }
+}
+
+
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10sp"
+        android:rowCount="3"
+        android:columnCount="2"
+
+        >
+        <Button
+            android:id="@+id/button1"
+           android:layout_gravity="fill"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:textSize="18sp"
+            android:layout_margin="5sp"
+            android:text="Open URL 1" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_gravity="fill"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:textSize="18sp"
+            android:layout_margin="5sp"
+            android:text="Open URL 2" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_gravity="fill"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:textSize="18sp"
+            android:layout_margin="5sp"
+            android:text="Open URL 3" />
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_gravity="fill"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:textSize="18sp"
+            android:layout_margin="5sp"
+            android:text="Open URL 4" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_gravity="fill"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:textSize="18sp"
+            android:layout_margin="5sp"
+            android:text="Open URL 5" />
+
+        <Button
+            android:id="@+id/button6"
+            android:layout_gravity="fill"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:textSize="18sp"
+            android:layout_margin="5sp"
+            android:text="Open URL 6" />
+
+    </GridLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+AndroidManifest.xml
+ <uses-permission android:name="android.permission.INTERNET" />
