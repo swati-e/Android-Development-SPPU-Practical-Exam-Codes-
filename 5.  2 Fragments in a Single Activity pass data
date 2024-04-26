@@ -1,0 +1,162 @@
+fragment_a.xml 
+   <?xml version="1.0" encoding="utf-8"?>
+   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical"
+       android:gravity="center">
+
+       <EditText
+           android:id="@+id/editTextFragmentA"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:hint="Enter data" />
+
+       <Button
+           android:id="@+id/btnSendData"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Send Data" />
+
+   </LinearLayout>
+   
+
+FragmentA.java
+
+   // FragmentA.java
+   import android.os.Bundle;
+   import android.view.LayoutInflater;
+   import android.view.View;
+   import android.view.ViewGroup;
+   import androidx.annotation.NonNull;
+   import androidx.annotation.Nullable;
+   import androidx.fragment.app.Fragment;
+   import android.widget.Button;
+   import android.widget.EditText;
+
+   public class FragmentA extends Fragment {
+
+       private EditText editTextFragmentA;
+       private Button btnSendData;
+
+       public FragmentA() {}
+
+       @Nullable
+       @Override
+       public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+           View view = inflater.inflate(R.layout.fragment_a, container, false);
+           editTextFragmentA = view.findViewById(R.id.editTextFragmentA);
+           btnSendData = view.findViewById(R.id.btnSendData);
+           btnSendData.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   sendData();
+               }
+           });
+           return view;
+       }
+
+       private void sendData() {
+           String data = editTextFragmentA.getText().toString();
+           if (!data.isEmpty()) {
+               MainActivity mainActivity = (MainActivity) getActivity();
+               if (mainActivity != null) {
+                   mainActivity.displayReceivedData(data);
+               }
+           }
+       }
+   }
+   
+
+fragment_b.xml
+
+   <?xml version="1.0" encoding="utf-8"?>
+   <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="vertical"
+       android:gravity="center">
+
+       <TextView
+           android:id="@+id/textViewFragmentB"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="24sp" />
+
+   </LinearLayout>
+   
+
+FragmentB.java
+
+   // FragmentB.java
+   import android.os.Bundle;
+   import android.view.LayoutInflater;
+   import android.view.View;
+   import android.view.ViewGroup;
+   import androidx.annotation.NonNull;
+   import androidx.annotation.Nullable;
+   import androidx.fragment.app.Fragment;
+   import android.widget.TextView;
+
+   public class FragmentB extends Fragment {
+
+       private TextView textViewFragmentB;
+
+       public FragmentB() {}
+
+       @Nullable
+       @Override
+       public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+           View view = inflater.inflate(R.layout.fragment_b, container, false);
+           textViewFragmentB = view.findViewById(R.id.textViewFragmentB);
+           return view;
+       }
+
+       public void displayReceivedData(String data) {
+           textViewFragmentB.setText(data);
+       }
+   }
+   
+
+MainActivity.java
+
+   // MainActivity.java
+   import androidx.appcompat.app.AppCompatActivity;
+   import android.os.Bundle;
+
+   public class MainActivity extends AppCompatActivity {
+
+       @Override
+       protected void onCreate(Bundle savedInstanceState) {
+           super.onCreate(savedInstanceState);
+           setContentView(R.layout.activity_main);
+
+           // Load Fragment A
+           getSupportFragmentManager().beginTransaction()
+                   .replace(R.id.fragmentContainer, new FragmentA())
+                   .commit();
+       }
+
+       public void displayReceivedData(String data) {
+           FragmentB fragmentB = (FragmentB) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+           if (fragmentB != null) {
+               fragmentB.displayReceivedData(data);
+           }
+       }
+   }
+
+
+activity_main.xml
+
+   <?xml version="1.0" encoding="utf-8"?>
+   <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+       <FrameLayout
+           android:id="@+id/fragmentContainer"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent" />
+
+   </RelativeLayout>
+   
