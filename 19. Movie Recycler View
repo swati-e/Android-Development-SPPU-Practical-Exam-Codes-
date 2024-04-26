@@ -1,0 +1,147 @@
+Create an application to Display Recycler View of Movie names with images.
+MainActivity.java
+package com.example.recycler_movie;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+import java.util.Arrays;
+public class MainActivity extends AppCompatActivity {
+    RecyclerView recyclerView;
+    // Using ArrayList to store images data
+    ArrayList<Integer> Img = new ArrayList<>(Arrays.asList(
+            R.drawable.name, R.drawable.vengers,
+            R.drawable.kashmir
+           ));
+    ArrayList<String> Name = new ArrayList<>(Arrays.asList(
+            "\tMy Name IS Khan",
+            "\tAvengers",
+            "\tKashmir Files"
+
+           ));
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+// Getting reference of recyclerView
+        recyclerView = findViewById(R.id.recyclerView);
+// Setting the layout as linear layout for vertical orientation
+        LinearLayoutManager linearLayoutManager = new
+                LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+// Sending reference and data to Adapter
+        Adapter adapter = new Adapter(MainActivity.this, Img, Name);
+// Setting Adapter to RecyclerView
+        recyclerView.setAdapter(adapter);
+    }
+}
+Adapter.java
+
+package com.example.recycler_movie;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+    ArrayList<Integer> Img;
+    ArrayList<String> Name;
+    Context context;
+    // Constructor for initialization
+    public Adapter(Context context, ArrayList<Integer> Img, ArrayList<String> Name) {
+        this.context = context;
+        this.Img = Img;
+        this.Name = Name;
+    }
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+// Inflating the Layout(Instantiates list_item.xml layout file into View)
+        View view =
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.ltem_list, parent, false);
+// Passing view to ViewHolder
+        ViewHolder viewHolder = new ViewHolder(view);
+        return viewHolder;
+    }
+    // Binding data to the views at the specified position
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+// Set image resource
+        holder.images.setImageResource(Img.get(position));
+// Set text
+        holder.text.setText(Name.get(position));
+    }
+    // Returns the total number of items in the data set held by the adapter.
+    @Override
+    public int getItemCount() {
+        return Img.size();
+    }
+    // Initializing the Views
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView images;
+        TextView text;
+        public ViewHolder(View view) {
+            super(view);
+            images = view.findViewById(R.id.Img);
+            text = view.findViewById(R.id.Name);
+        }
+    }
+}
+Activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <!-- RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+
+ltem_list.xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <!-- For image src we have used ic_launcher and for text "courseName" they are used
+    only for reference how it will looks -->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/Img"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:padding="8dp"/>
+        <!-- android:src="@drawable" />-->
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Name"
+        android:textAlignment="textStart"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        tools:ignore="RtlCompat" />
+</LinearLayout>
+
