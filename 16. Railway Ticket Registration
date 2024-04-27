@@ -1,0 +1,218 @@
+MainActivity.java
+package com.example.a16railwayticketregistration;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private Spinner spinnerBerthChoice;
+    private RadioGroup radioGroupDestination;
+    private CheckBox checkBoxVeg, checkBoxNonVeg;
+    private Button buttonSubmit;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        spinnerBerthChoice = findViewById(R.id.spinnerBerthChoice);
+        radioGroupDestination = findViewById(R.id.radioGroupDestination);
+        checkBoxVeg = findViewById(R.id.checkBoxVeg);
+        checkBoxNonVeg = findViewById(R.id.checkBoxNonVeg);
+        buttonSubmit = findViewById(R.id.buttonSubmit);
+
+        // Populate the spinner with berth choices
+        ArrayAdapter<CharSequence> berthAdapter = ArrayAdapter.createFromResource(this,
+                R.array.berth_choices_array, android.R.layout.simple_spinner_item);
+        berthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerBerthChoice.setAdapter(berthAdapter);
+
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String selectedBerthChoice = spinnerBerthChoice.getSelectedItem().toString();
+                int selectedDestinationId = radioGroupDestination.getCheckedRadioButtonId();
+                RadioButton selectedDestination = findViewById(selectedDestinationId);
+                boolean isVegChecked = checkBoxVeg.isChecked();
+                boolean isNonVegChecked = checkBoxNonVeg.isChecked();
+
+                Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
+                intent.putExtra("selectedBerthChoice", selectedBerthChoice);
+                intent.putExtra("selectedDestination", selectedDestination.getText().toString());
+                intent.putExtra("isVegChecked", isVegChecked);
+                intent.putExtra("isNonVegChecked", isNonVegChecked);
+                startActivity(intent);
+            }
+        });
+    }
+}
+
+DisplayActivity.java 
+package com.example.a16railwayticketregistration;
+
+
+import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class DisplayActivity extends AppCompatActivity {
+
+    private TextView textViewDisplay;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display);
+
+        textViewDisplay = findViewById(R.id.textViewDisplay);
+
+        String selectedBerthChoice = getIntent().getStringExtra("selectedBerthChoice");
+        String selectedDestination = getIntent().getStringExtra("selectedDestination");
+        boolean isVegChecked = getIntent().getBooleanExtra("isVegChecked", false);
+        boolean isNonVegChecked = getIntent().getBooleanExtra("isNonVegChecked", false);
+
+        String mealPreference = "";
+        if (isVegChecked) {
+            mealPreference = "Vegetarian";
+        } else if (isNonVegChecked) {
+            mealPreference = "Non-Vegetarian";
+        } else {
+            mealPreference = "No Preference";
+        }
+
+        String displayText = "Berth Choice: " + selectedBerthChoice + "\n" +
+                "Destination City: " + selectedDestination + "\n" +
+                "Meal Preference: " + mealPreference;
+
+        textViewDisplay.setText(displayText);
+    }
+}
+
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Berth Choice:"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/spinnerBerthChoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Destination City:"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupDestination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radioButtonKashmir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kashmir"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/radioButtonPune"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pune"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/radioButtonDelhi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delhi"
+                android:textSize="16sp" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meal Preference:"
+            android:textSize="18sp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxVeg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vegetarian"
+            android:textSize="16sp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxNonVeg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Non-Vegetarian"
+            android:textSize="16sp" />
+
+
+        <Button
+            android:id="@+id/buttonSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Submit"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</ScrollView>
+
+
+activity_display.xml
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp" />
+
+</ScrollView>
+
+strings.xml
+
+<resources>
+    <string-array name="berth_choices_array">
+        <item>Upper Berth</item>
+        <item>Lower Berth</item>
+        <item>Sleeper Berth</item>
+    </string-array>
+    <string name="app_name">\n</string>
+</resources>
