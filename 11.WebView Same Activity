@@ -1,0 +1,6 @@
+MainActivity.java
+
+activity_main.xml
+
+AndroidManifest.xml
+<uses-permission android:name="android.permission.INTERNET" />
