@@ -155,3 +155,7 @@ activity_web_view.xml
         android:layout_height="match_parent"/>
 
 </RelativeLayout>
+
+
+AndroidManifest.xml:
+   <uses-permission android:name="android.permission.INTERNET" />
