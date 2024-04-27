@@ -1,0 +1,107 @@
+MainActivity.java 
+package com.example.a1718;
+
+import android.os.Bundle;
+import android.view.ContextMenu; import android.view.MenuItem; import android.view.View;
+import android.widget.Button; import android.widget.PopupMenu; import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog; import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+
+
+    private static final int CONTEXT_ITEM_1 = 1; private static final int CONTEXT_ITEM_2 = 2;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); setContentView(R.layout.activity_main);
+
+        Button btnAlertDialog = findViewById(R.id.btnAlertDialog); Button btnPopupMenu = findViewById(R.id.btnPopupMenu); Button btnContextMenu = findViewById(R.id.btnContextMenu);
+
+// Show AlertDialog
+        btnAlertDialog.setOnClickListener(new View.OnClickListener() { @Override
+        public void onClick(View v) { showAlertDialog();
+        }
+        });
+
+// Show PopupMenu
+        btnPopupMenu.setOnClickListener(new View.OnClickListener() { @Override
+        public void onClick(View v) { showPopupMenu(v);
+        }
+        });
+
+// Register ContextMenu
+        btnContextMenu.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                menu.add(0, CONTEXT_ITEM_1, 0, "Context Item 1");
+                menu.add(0, CONTEXT_ITEM_2, 0, "Context Item 2");
+            }
+        });
+    }
+
+    // AlertDialog
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this); builder.setTitle("AlertDialog Title")
+                .setMessage("This is a message for AlertDialog")
+                .setPositiveButton("OK", null)
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    // PopupMenu
+    private void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(this, view); popupMenu.getMenu().add("Popup Item 1");
+        popupMenu.getMenu().add("Popup Item 2");
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() { @Override
+        public boolean onMenuItemClick(MenuItem item) { Toast.makeText(MainActivity.this, "Selected item: " + item.getTitle(),
+                Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        });
+
+        popupMenu.show();
+    }
+
+    // ContextMenu
+    @Override
+    public boolean onContextItemSelected(MenuItem item) { switch (item.getItemId()) {
+        case CONTEXT_ITEM_1:
+            Toast.makeText(this, "Context Item 1 selected", Toast.LENGTH_SHORT).show();
+            return true; case CONTEXT_ITEM_2:
+            Toast.makeText(this, "Context Item 2 selected", Toast.LENGTH_SHORT).show();
+            return true; default:
+            return super.onContextItemSelected(item);
+    }
+    }
+}
+
+activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btnAlertDialog" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerInParent="true" android:text="Show AlertDialog" android:backgroundTint="#51829B"/>
+
+    <Button
+        android:id="@+id/btnPopupMenu" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/btnAlertDialog" android:layout_centerHorizontal="true" android:layout_marginTop="16dp" android:text="Show PopupMenu" android:backgroundTint="#51829B"/>
+
+    <Button
+        android:id="@+id/btnContextMenu" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@id/btnPopupMenu" android:layout_centerHorizontal="true" android:layout_marginTop="16dp"
+        android:text="Show ContextMenu" android:backgroundTint="#51829B"/>
+
+    <TextView
+        android:id="@+id/headingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnAlertDialog"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="174dp"
+        android:layout_marginBottom="142dp"
+        android:text="Enter you heading here "
+        android:textSize="24sp" />
+
+</RelativeLayout>
