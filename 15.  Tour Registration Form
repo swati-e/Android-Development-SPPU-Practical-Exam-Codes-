@@ -1,0 +1,252 @@
+MainActivity.java
+package com.example.tourregistrationform;
+
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private Spinner spinnerGroupType;
+    private RadioGroup radioGroupPackages;
+    private CheckBox checkBoxDelhi, checkBoxKokan, checkBoxNepal;
+    private Button buttonSubmit;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        spinnerGroupType = findViewById(R.id.spinnerGroupType);
+        radioGroupPackages = findViewById(R.id.radioGroupPackages);
+        checkBoxDelhi = findViewById(R.id.checkBoxDelhi);
+        checkBoxKokan = findViewById(R.id.checkBoxKokan);
+        checkBoxNepal = findViewById(R.id.checkBoxNepal);
+        buttonSubmit = findViewById(R.id.buttonSubmit);
+
+        // Populate the spinner with group type
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.group_type_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGroupType.setAdapter(adapter);
+
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String selectedGroupType = spinnerGroupType.getSelectedItem().toString();
+                int selectedPackageId = radioGroupPackages.getCheckedRadioButtonId();
+                RadioButton selectedPackage = findViewById(selectedPackageId);
+                boolean isDelhiChecked = checkBoxDelhi.isChecked();
+                boolean isKokanChecked = checkBoxKokan.isChecked();
+                boolean isNepalChecked = checkBoxNepal.isChecked();
+
+                Intent intent = new Intent(MainActivity.this, DisplayActivity.class);
+                intent.putExtra("selectedGroupType", selectedGroupType);
+                intent.putExtra("selectedPackage", selectedPackage.getText().toString());
+                intent.putExtra("isDelhiChecked", isDelhiChecked);
+                intent.putExtra("isKokanChecked", isKokanChecked);
+                intent.putExtra("isNepalChecked", isNepalChecked);
+                startActivity(intent);
+            }
+        });
+    }
+}
+
+
+
+DisplayActivity.java
+
+package com.example.tourregistrationform;
+
+
+import android.os.Bundle;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class DisplayActivity extends AppCompatActivity {
+
+    private TextView textViewDisplay;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display);
+
+        textViewDisplay = findViewById(R.id.textViewDisplay);
+
+        String selectedGroupType = getIntent().getStringExtra("selectedGroupType");
+        String selectedPackage = getIntent().getStringExtra("selectedPackage");
+        boolean isDelhiChecked = getIntent().getBooleanExtra("isDelhiChecked", false);
+        boolean isKokanChecked = getIntent().getBooleanExtra("isKokanChecked", false);
+        boolean isNepalChecked = getIntent().getBooleanExtra("isNepalChecked", false);
+
+        String displayText = "Group Type: " + selectedGroupType + "\n" +
+                "Selected Package: " + selectedPackage + "\n" +
+                "Delhi: " + (isDelhiChecked ? "Yes" : "No") + "\n" +
+                "Kokan: " + (isKokanChecked ? "Yes" : "No") + "\n" +
+                "Nepal: " + (isNepalChecked ? "Yes" : "No");
+
+        textViewDisplay.setText(displayText);
+    }
+}
+
+
+
+main_activity.xml
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Group Type:"
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/spinnerGroupType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Package:"
+            android:textSize="18sp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupPackages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radioButtonPackage1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Package 1 - 15k"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/radioButtonPackage2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Package 2 - 20k"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/radioButtonPackage3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Package 3 - 25k"
+                android:textSize="16sp" />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Destination:"
+            android:textSize="18sp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxDelhi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delhi"
+            android:textSize="16sp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxKokan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kokan"
+            android:textSize="16sp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxNepal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nepal"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/buttonSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Submit"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+</ScrollView>
+
+
+
+display_activity.xml
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp" />
+
+</ScrollView>
+
+strings.xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Group Type Options -->
+    <string-array name="group_type_array">
+        <item>Group</item>
+        <item>Individual</item>
+    </string-array>
+
+    <!-- Package Options -->
+    <string-array name="package_options_array">
+        <item>Package 1</item>
+        <item>Package 2</item>
+        <item>Package 3</item>
+    </string-array>
+
+    <!-- Checkbox Labels -->
+    <string name="city_label">City</string>
+    <string name="location_label">Location</string>
+    <string name="country_label">Country</string>
+
+    <!-- Button Labels -->
+    <string name="submit_button_label">Submit</string>
+
+    <!-- Default Strings for Display Activity -->
+    <string name="group_type_label">Group Type: </string>
+    <string name="selected_package_label">Selected Package: </string>
+    <string name="city_selected_label">City: </string>
+    <string name="location_selected_label">Location: </string>
+    <string name="country_selected_label">Country: </string>
+    <string name="package_options_array">\n</string>
+    <string name="app_name" />
+</resources>
